@@ -4,7 +4,7 @@ from time import sleep
 
 driver = uc.Chrome()
 # sleep(60)
-actions.login(driver, "gusdias3301@gmail.com","vDJinm23")
+actions.login(driver, "email","passw")
 sleep(10)
 actions.save_cookies(driver)
 person = Person('https://www.linkedin.com/in/andre-iguodala-65b48ab5',driver=driver)
