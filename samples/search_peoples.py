@@ -7,6 +7,9 @@ driver = uc.Chrome()
 actions.login(driver, "gusdias3301@gmail.com","vDJinm23")
 sleep(10)
 actions.save_cookies(driver)
+person = Person('https://www.linkedin.com/in/andre-iguodala-65b48ab5',driver=driver)
+print(person)
+exit(0)
 for i in range(1,101):
 	links = actions.search_peoples(driver, "medico", page=i)
 	for l in links:
