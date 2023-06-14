@@ -1,4 +1,5 @@
 import getpass
+import pickle
 from . import constants as c
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -43,3 +44,29 @@ def _login_with_cookie(driver, cookie):
       "name": "li_at",
       "value": cookie
     })
+
+def save_cookies(driver):
+    with open(f"cookies.pkl", "wb") as fd:
+        pickle.dump(driver.get_cookies(), fd)
+
+
+def load_cookies(driver):
+    if not exists('cookies.pkl'):
+        return False
+    else:
+        cookies = pickle.load(open('cookies.pkl','rb'))
+        driver.get('https://linkedin.com')
+        for cookie in cookies:
+            try:
+                driver.add_cookie(cookie)
+            except Exception as e:
+                pass
+        driver.get('https://www.linkedin.com/feed/')
+        return True
+
+def search_peoples(driver, query, page = 1, timeout = 10):
+    url = f'https://www.linkedin.com/search/results/people/?keywords={query}&origin=SWITCH_SEARCH_VERTICAL&page={page}&sid=*OR'
+    driver.get(url)
+    WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.CLASS_NAME, c.RESULT_BOX)))
+    elements = driver.find_elements(By.XPATH, f'//a[@class="{c.RESULT_BOX}"]')
+    return [element.get_attribute('href') for element in elements]
